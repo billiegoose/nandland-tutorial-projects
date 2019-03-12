@@ -1,0 +1,26 @@
+By default, I'm using 115200Hz on the terminal.
+If the Go Board is reading at 921600 (or 8x faster) then at most the first bit
+of the 1x message is misinterpreted as the last bit of an 8x message. Since MSb
+comes last, the LSb becomes the MSb and all other bits are zeroed bc of the start bit.
+Thus all messages consist of 0x80 or 0x00.
+
+Prediction: If the Go Board is 4x faster, the 2 LSb will become the two MSb.
+Messages should consist of 0x00, 0x40, 0x80, 0xC0.
+Actual results: 0x00, 0x80, 0x78, 0xF8
+
+Prediction: If the Go Board is 2x faster, each pair of bits will act like one.
+Actual results: I have no idea what the pattern is if any.
+
+Prediction: If the Go Board is 16x faster, all it reads is zeros.
+Actual result: TRUE.
+
+Prediction: If the Go Board is 16x slower, all it reads is ones.
+Actual result: TRUE.
+
+Prediction: If we read 0x00 or 0xFF, we should only see 2 voltage shifts.
+
+Prediction: For any presumed bitrate, we should never see more than 1 voltage shift
+per bit period.
+
+Prediction: We should never see a low signal that lasts longer than 9 bit periods,
+assuming a stop bit exists. 
